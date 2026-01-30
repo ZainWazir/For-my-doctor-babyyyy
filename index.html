@@ -1,264 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For You ❤️</title>
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You ❤️</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        color: #333;
-    }
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
 
-    .page {
-        display: none;
-        text-align: center;
-        padding: 50px 30px;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 25px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-        max-width: 700px;
-        width: 90%;
-        animation: fadeIn 0.7s ease-in-out;
-    }
+        .page {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 90%;
+            animation: fadeIn 0.6s ease-in;
+            overflow: hidden;
+        }
 
-    .page.active { display: block; }
+        .page.active { display: block; }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    h1 {
-        color: #ff4e50;
-        margin-bottom: 25px;
-        font-size: 2.7em;
-        line-height: 1.3;
-    }
+        h1 { color: #764ba2; margin-bottom: 30px; font-size: 2.5em; line-height: 1.4; }
+        p { color: #555; font-size: 1.3em; margin-bottom: 30px; line-height: 1.6; }
 
-    p {
-        color: #555;
-        font-size: 1.4em;
-        margin-bottom: 25px;
-        line-height: 1.6;
-    }
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin: 10px;
+        }
 
-    button {
-        padding: 15px 40px;
-        font-size: 1.2em;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-weight: 700;
-        margin: 10px;
-    }
+        .next-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(245,87,108,0.4);
+        }
+        .next-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(245,87,108,0.6); }
+        .next-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    .next-btn {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-        box-shadow: 0 8px 20px rgba(245, 87, 108, 0.5);
-    }
+        .yes-btn {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(67,233,123,0.4);
+        }
+        .yes-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(67,233,123,0.6); }
 
-    .next-btn:hover {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 12px 25px rgba(245, 87, 108, 0.7);
-    }
+        .no-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+        }
+        .no-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(255,107,107,0.6); }
 
-    .yes-btn {
-        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        color: white;
-        box-shadow: 0 8px 20px rgba(67, 233, 123, 0.5);
-    }
+        .loading { display: inline-block; margin-left: 10px; }
 
-    .yes-btn:hover {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 12px 25px rgba(67, 233, 123, 0.7);
-    }
+        .hearts { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; }
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            animation: float 6s infinite;
+            opacity: 0.6;
+        }
 
-    .no-btn {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-        color: white;
-        box-shadow: 0 8px 20px rgba(255, 107, 107, 0.5);
-    }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
 
-    .no-btn:hover {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 12px 25px rgba(255, 107, 107, 0.7);
-    }
+        .button-container { margin-top: 30px; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-    .loading { display: inline-block; margin-left: 10px; }
+        .corner-gif {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            z-index: 10;
+            opacity: 0.8;
+        }
+        .top-left { top:20px; left:20px; }
+        .top-right { top:20px; right:20px; }
+        .bottom-left { bottom:20px; left:20px; }
+        .bottom-right { bottom:20px; right:20px; }
 
-    .hearts {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: -1;
-    }
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+        .music-control:hover { transform: scale(1.1); }
 
-    .heart {
-        position: absolute;
-        font-size: 20px;
-        animation: float 6s infinite ease-in-out;
-        opacity: 0.7;
-    }
+        .gif-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+            padding: 20px;
+        }
 
-    @keyframes float {
-        0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-        50% { opacity: 0.7; }
-        100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-    }
+        .grid-gif { width:100%; height:150px; object-fit:cover; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.2); }
+        .page-gif { width:100px; height:100px; object-fit:contain; margin:10px; display:inline-block; }
+        .header-gif { width:80px; height:80px; object-fit:contain; display:inline-block; vertical-align:middle; }
 
-    .button-container { margin-top: 30px; display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; }
-
-    .corner-gif {
-        position: fixed;
-        width: 160px;
-        height: 160px;
-        object-fit: contain;
-        z-index: 10;
-        opacity: 0.85;
-        transition: transform 0.3s;
-    }
-
-    .corner-gif:hover { transform: scale(1.1) rotate(-5deg); }
-
-    .top-left { top: 20px; left: 20px; }
-    .top-right { top: 20px; right: 20px; }
-    .bottom-left { bottom: 20px; left: 20px; }
-    .bottom-right { bottom: 20px; right: 20px; }
-
-    .music-control {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: rgba(255,255,255,0.95);
-        padding: 12px 18px;
-        border-radius: 50px;
-        cursor: pointer;
-        font-size: 26px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.25);
-        z-index: 100;
-        transition: transform 0.2s;
-    }
-
-    .music-control:hover { transform: scale(1.15); }
-
-    .gif-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 18px;
-        margin-top: 30px;
-        padding: 20px;
-    }
-
-    .grid-gif {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 15px;
-        box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-        transition: transform 0.3s;
-    }
-
-    .grid-gif:hover { transform: scale(1.05); }
-
-    .page-gif, .header-gif { transition: transform 0.3s; }
-    .page-gif:hover, .header-gif:hover { transform: scale(1.1) rotate(-3deg); }
-</style>
+    </style>
 </head>
 <body>
-<!-- Background Music -->
-<audio id="bgMusic" loop>
-    <source src="She & Him - I Thought I Saw Your Face Today.m4a" type="audio/mp4">
-</audio>
 
-<!-- Music Control -->
-<div class="music-control" id="musicControl" onclick="toggleMusic()">🔇</div>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="She & Him - I Thought I Saw Your Face Today.m4a" type="audio/mp4">
+    </audio>
+    <div class="music-control" id="musicControl">🔇</div>
 
-<!-- Corner GIFs -->
-<img src="clean10.gif" class="corner-gif top-left" alt="hearts">
-<img src="clean1.gif" class="corner-gif top-right" alt="love">
-<img src="clean6.gif" class="corner-gif bottom-left" alt="hearts">
-<img src="clean5.gif" class="corner-gif bottom-right" alt="cupid">
+    <!-- Corner GIFs -->
+    <img src="clean10.gif" class="corner-gif top-left" alt="hearts">
+    <img src="clean1.gif" class="corner-gif top-right" alt="love">
+    <img src="clean6.gif" class="corner-gif bottom-left" alt="hearts">
+    <img src="clean5.gif" class="corner-gif bottom-right" alt="cupid">
 
-<div class="hearts" id="hearts"></div>
+    <div class="hearts" id="hearts"></div>
 
-<!-- Pages remain exactly same with your GIF names -->
-<!-- ...all your page divs remain unchanged... -->
+    <!-- Page 1: Valentine's Message -->
+    <div class="page" id="page1">
+        <h1><img src="header1.gif" class="header-gif" alt="heart"> Happy Valentine's Day <img src="header1.gif" class="header-gif" alt="heart"></h1>
+        <p>[Your beautiful Valentine's Day message will go here. Write something sweet and heartfelt that expresses your feelings.]</p>
+        <div>
+            <img src="clean2.gif" class="page-gif" alt="gif">
+            <img src="clean3.gif" class="page-gif" alt="gif">
+        </div>
+        <button class="next-btn" onclick="goToPage2()">Next</button>
+    </div>
 
-<script>
-let noClickCount = 0;
-const emojis = ['sadcat1.gif','sadcat2.gif','sadcat3.gif','sadcat4.gif','sadcat5.gif','sadcat6.gif','sadcat7.gif','sadcat8.gif'];
-const bgMusic = document.getElementById('bgMusic');
-const musicControl = document.getElementById('musicControl');
-let isMusicPlaying = false;
+    <!-- Page 2 -->
+    <div class="page" id="page2">
+        <p>I love you so much my beautiful little nerdy doctor</p>
+        <div>
+            <img src="clean4.gif" class="page-gif" alt="gif">
+            <img src="clean7.gif" class="page-gif" alt="gif">
+        </div>
+        <button class="next-btn" onclick="goToPage3()">Next</button>
+    </div>
 
-function toggleMusic() {
-    if(isMusicPlaying){ bgMusic.pause(); musicControl.textContent='🔇'; isMusicPlaying=false; }
-    else{ bgMusic.play(); musicControl.textContent='🔊'; isMusicPlaying=true; }
-}
-document.addEventListener('click', function playOnFirstClick() {
-    if(!isMusicPlaying){ bgMusic.play(); musicControl.textContent='🔊'; isMusicPlaying=true; }
-    document.removeEventListener('click', playOnFirstClick);
-}, {once:true});
+    <!-- Page 3 -->
+    <div class="page" id="page3">
+        <p>Do you love me?</p>
+        <div>
+            <img src="clean8.gif" class="page-gif" alt="gif">
+            <img src="clean9.gif" class="page-gif" alt="gif">
+        </div>
+        <div class="button-container">
+            <button class="yes-btn" id="yesBtn" onclick="goToPageYes()">Yes</button>
+            <button class="no-btn" id="noBtn" onclick="handleNo()">No</button>
+        </div>
+    </div>
 
-function createHearts() {
-    const heartsContainer = document.getElementById('hearts');
-    for(let i=0;i<15;i++){
-        const heart = document.createElement('div');
-        heart.className='heart';
-        heart.innerHTML='❤️';
-        heart.style.left=Math.random()*100+'%';
-        heart.style.animationDelay=Math.random()*6+'s';
-        heart.style.fontSize=(Math.random()*20+15)+'px';
-        heartsContainer.appendChild(heart);
-    }
-}
+    <!-- Dynamic No Page -->
+    <div class="page" id="pageNoDynamic">
+        <h1 id="sadEmoji"><img src="header4.gif" class="header-gif" alt="sad"></h1>
+        <p>Do you love me?</p>
+        <div class="button-container">
+            <button class="yes-btn" id="yesBtnDynamic" onclick="goToPageYes()">Yes</button>
+            <button class="no-btn" id="noBtnDynamic" onclick="handleNo()">No</button>
+        </div>
+    </div>
 
-function showPage(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+    <!-- Page Yes -->
+    <div class="page" id="pageYes">
+        <h1><img src="yes.gif" class="header-gif" alt="love"></h1>
+        <p style="font-size:1.8em; color:#764ba2; font-weight:bold; margin:20px 0;">I love you more</p>
+        <div>
+            <img src="clean9.gif" class="page-gif" alt="gif">
+            <img src="clean10.gif" class="page-gif" alt="gif">
+        </div>
+        <button class="next-btn" onclick="goToMyTurn()">Next</button>
+    </div>
 
-function goToPage2(){ const btn=event.target; btn.disabled=true; btn.innerHTML='Loading<span class="loading">...</span>'; setTimeout(()=>{showPage('page2');},2000);}
-function goToPage3(){ const btn=event.target; btn.disabled=true; btn.innerHTML='Loading<span class="loading">...</span>'; setTimeout(()=>{showPage('page3');},2000);}
-function goToPageYes(){ showPage('pageYes'); }
-function goToMyTurn(){ showPage('pageMyTurn'); }
-function goToConfirmation(){ showPage('pageConfirmation'); }
-function goToFinalPage(){ showPage('pageFinal'); }
-function goToTrickPage(){ showPage('pageTrick'); setTimeout(()=>{showPage('pageFinal');},5000); }
+    <!-- Page My Turn -->
+    <div class="page" id="pageMyTurn">
+        <h1><img src="header6.gif" class="header-gif" alt="laugh"></h1>
+        <p>Ab meri baari wish krne ki</p>
+        <button class="next-btn" onclick="goToConfirmation()">Continue</button>
+    </div>
 
-function handleNo(){
-    noClickCount++;
-    const yesBtn=document.getElementById('yesBtnDynamic');
-    const noBtn=document.getElementById('noBtnDynamic');
-    const sadEmoji=document.getElementById('sadEmoji');
-    if(noClickCount<emojis.length){ sadEmoji.innerHTML=`<img src="${emojis[noClickCount]}" class="header-gif" alt="sad">`; }
-    else{ sadEmoji.innerHTML=`<img src="${emojis[emojis.length-1]}" class="header-gif" alt="sad">`; }
+    <!-- Page Confirmation -->
+    <div class="page" id="pageConfirmation">
+        <h1><img src="header7.gif" class="header-gif" alt="thinking"></h1>
+        <p>Are you sure you want to click it?</p>
+        <div class="button-container">
+            <button class="yes-btn" onclick="goToFinalPage()">Go to next page</button>
+            <button class="no-btn" onclick="goToTrickPage()">Go back</button>
+        </div>
+    </div>
 
-    const yesPadding=15+(noClickCount*10);
-    const yesFont=1.2+(noClickCount*0.2);
-    const noPadding=Math.max(2,15-(noClickCount*2.5));
-    const noFont=Math.max(0.5,1.2-(noClickCount*0.15));
+    <!-- Trick Page -->
+    <div class="page" id="pageTrick">
+        <h1><img src="header6.gif" class="header-gif" alt="laugh"></h1>
+        <p>Apko laga me janay dunga wapis? 😭🤣</p>
+    </div>
 
-    yesBtn.style.padding=`${yesPadding}px ${yesPadding*2.5}px`;
-    yesBtn.style.fontSize=`${yesFont}em`;
-    if(noClickCount>=8){ noBtn.style.display='none'; }
-    else{ noBtn.style.padding=`${noPadding}px ${noPadding*2}px`; noBtn.style.fontSize=`${noFont}em`; }
+    <!-- Final Valentine Page -->
+    <div class="page" id="pageFinal" style="max-width:800px;">
+        <h1><img src="header8.gif" class="header-gif" alt="valentine"></h1>
+        <p>Happy Valentines day my beautiful hawttie 🤭😉💝</p>
+        <div class="gif-grid">
+            <img src="dirty1.gif" class="grid-gif" alt="valentine gif">
+            <img src="dirty2.gif" class="grid-gif" alt="valentine gif">
+            <img src="dirty3.gif" class="grid-gif" alt="valentine gif">
+            <img src="dirty4.gif" class="grid-gif" alt="valentine gif">
+            <img src="dirty5.gif" class="grid-gif" alt="valentine gif">
+            <img src="dirty6.gif" class="grid-gif" alt="valentine gif">
+        </div>
+    </div>
 
-    if(noClickCount===1){ showPage('pageNoDynamic'); }
-}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const bgMusic = document.getElementById('bgMusic');
+            const musicControl = document.getElementById('musicControl');
+            let isMusicPlaying = false;
+            let noClickCount = 0;
+            const emojis = ['sadcat1.gif','sadcat2.gif','sadcat3.gif','sadcat4.gif','sadcat5.gif','sadcat6.gif','sadcat7.gif','sadcat8.gif'];
 
-createHearts();
-</script>
+            function createHearts() {
+                const heartsContainer = document.getElementById('hearts');
+                for(let i=0;i<15;i++){
+                    const heart=document.createElement('div');
+                    heart.className='heart';
+                    heart.innerHTML='❤️';
+                    heart.style.left=Math.random()*100+'%';
+                    heart.style.animationDelay=Math.random()*6+'s';
+                    heart.style.fontSize=(Math.random()*20+15)+'px';
+                    heartsContainer.appendChild(heart);
+                }
+            }
+
+            function showPage(pageId) {
+                document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+                document.getElementById(pageId).classList.add('active');
+            }
+
+            function toggleMusic() {
+                if(isMusicPlaying){ bgMusic.pause(); musicControl.textContent='🔇'; isMusicPlaying=false; }
+                else { bgMusic.play(); musicControl.textContent='🔊'; isMusicPlaying=true; }
+            }
+
+            musicControl.onclick = toggleMusic;
+
+            document.addEventListener('click', function playOnFirstClick() {
+                if(!isMusicPlaying){ bgMusic.play(); musicControl.textContent='🔊'; isMusicPlaying=true; }
+                document.removeEventListener('click', playOnFirstClick);
+            }, { once: true });
+
+            // Page navigation functions
+            window.goToPage2 = () => { const btn=event.target; btn.disabled=true; btn.innerHTML='Loading<span class="loading">...</span>'; setTimeout(()=>showPage('page2'),2000); }
+            window.goToPage3 = () => { const btn=event.target; btn.disabled=true; btn.innerHTML='Loading<span class="loading">...</span>'; setTimeout(()=>showPage('page3'),2000); }
+            window.goToPageYes = () => showPage('pageYes');
+            window.goToMyTurn = () => showPage('pageMyTurn');
+            window.goToConfirmation = () => showPage('pageConfirmation');
+            window.goToFinalPage = () => showPage('pageFinal');
+            window.goToTrickPage = () => { showPage('pageTrick'); setTimeout(()=>showPage('pageFinal'),5000); }
+
+            window.handleNo = () => {
+                noClickCount++;
+                const yesBtn = document.getElementById('yesBtnDynamic');
+                const noBtn = document.getElementById('noBtnDynamic');
+                const sadEmoji = document.getElementById('sadEmoji');
+
+                if(noClickCount<emojis.length) sadEmoji.innerHTML=`<img src="${emojis[noClickCount]}" class="header-gif" alt="sad">`;
+                else sadEmoji.innerHTML=`<img src="${emojis[emojis.length-1]}" class="header-gif" alt="sad">`;
+
+                const yesPadding = 15 + (noClickCount*10);
+                const yesFont = 1.2 + (noClickCount*0.2);
+                const noPadding = Math.max(2,15-(noClickCount*2.5));
+                const noFont = Math.max(0.5,1.2-(noClickCount*0.15));
+
+                yesBtn.style.padding=`${yesPadding}px ${yesPadding*2.5}px`;
+                yesBtn.style.fontSize=`${yesFont}em`;
+
+                if(noClickCount>=8) noBtn.style.display='none';
+                else { noBtn.style.padding=`${noPadding}px ${noPadding*2}px`; noBtn.style.fontSize=`${noFont}em`; }
+
+                if(noClickCount===1) showPage('pageNoDynamic');
+            }
+
+            createHearts();
+            showPage('page1'); // Make sure first page shows
+        });
+    </script>
 </body>
 </html>
